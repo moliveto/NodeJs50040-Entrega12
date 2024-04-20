@@ -7,9 +7,8 @@ const schema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
-  thumbnail: { type: String, default: 'Sin imagen' },
-  code: { type: String, required: true, unique: true, index: true },
   quantity: { type: Number, required: true },
+  thumbnail: { type: String, default: 'Sin imagen' },
   status: { type: Boolean, default: true },
 });
 

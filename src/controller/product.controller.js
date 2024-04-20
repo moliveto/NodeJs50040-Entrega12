@@ -58,6 +58,7 @@ export default class ProductCtrl {
   createProduct = async (req, res) => {
     try {
       console.log("BODY!!", req.body);
+
       const productDto = new ProductDTO(req.body);
 
       // TODO: si el deteo tiene algun error lanzar su error 400 o BAD REQUEST

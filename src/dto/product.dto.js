@@ -4,5 +4,6 @@ export default class ProductDTO {
     this.description = product.description;
     this.quantity = product.quantity;
     this.price = product.price;
+    this.status = product.status;
   }
 }

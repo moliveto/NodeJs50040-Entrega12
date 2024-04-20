@@ -109,8 +109,7 @@ Content-Type: application/json
   "description" : "Bebida cola",
   "price" : 101.10,
   "thumbnail" : "cocacola.jpg",
-  "code" : "cocacola",
-  "stock" : 30,
+  "quantity" : 30,
   "status": true
 }
 ###
@@ -129,7 +128,7 @@ Content-Type: application/json
   "price" : 101.10,
   "thumbnail" : "cocacola.jpg",
   "code" : "cocacola",
-  "stock" : 55,
+  "quantity" : 55,
   "status": true
 }
 ###

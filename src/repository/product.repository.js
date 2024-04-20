@@ -10,7 +10,8 @@ export default class ProductRepositoryDao {
       const products = await productModel.find({});
       return products;
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      console.log("🚀 ~ ProductRepositoryDao ~ getAllProducts= ~ error:", error)
+      throw error;
     }
   };
 
@@ -19,7 +20,8 @@ export default class ProductRepositoryDao {
       const productData = await productModel.findById({ _id: pId });
       return productData;
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      console.log("🚀 ~ ProductRepositoryDao ~ getProductById= ~ error:", error)
+      throw error;
     }
   };
 
@@ -28,7 +30,8 @@ export default class ProductRepositoryDao {
       const newProduct = await productModel.create(productBodyDto);
       return newProduct;
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      console.log("🚀 ~ ProductRepositoryDao ~ createProduct= ~ error:", error)
+      throw error;
     }
   };
 
@@ -37,7 +40,8 @@ export default class ProductRepositoryDao {
       const deleteP = await productModel.deleteOne({ _id: pId });
       return deleteP;
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      console.log("🚀 ~ ProductRepositoryDao ~ deleteProductById ~ error:", error)
+      throw error;
     }
   };
 }
