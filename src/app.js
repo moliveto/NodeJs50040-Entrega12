@@ -1,28 +1,21 @@
 import express from "express";
-const mongoose = require("mongoose");
 import cookieParser from "cookie-parser";
 import displayRoutes from "express-routemap";
 
-const app = express();
-const PORT = 5000;
-const API_PREFIX = "api";
+import productsRoutes from "./routes/product.routes.js";
+import { PORT, PERSISTENCE } from "./config/config.js";
 
-const DB_HOST = "localhost";
-const DB_PORT = 27017;
-const DB_NAME = "entrega12";
+const app = express();
+
+const PORT_APP = PORT | 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-mongoose
-    .connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`)
-    .then((conn) => {
-        console.log("CONNECTED TO MONGO, WELCOME!!!");
-    })
-    .catch((err) => {
-        console.log("ERROR CONNECTION!!!", err);
-    });
+app.use("/api/products/", productsRoutes);
 
-app.listen(PORT, () => {
-    console.log(`UP AND RUNNING ON PORT: ${PORT}`);
+app.listen(PORT_APP, () => {
+    displayRoutes(app);
+    console.log(`Listening on ${PORT_APP}, PERSISTENCE: ${PERSISTENCE}`);
 });
