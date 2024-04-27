@@ -1,6 +1,7 @@
 import { PERSISTENCE } from "../config/config.js";
 import pmDao from './product.dao.js';
 import umDao from './user.dao.js';
+import cmDao from './cart.dao.js';
 
 let Products;
 let Users;
@@ -12,6 +13,7 @@ switch (PERSISTENCE) {
   case "MONGO":
     Products = pmDao.getInstance();
     Users = umDao.getInstance();
+    Carts = cmDao.getInstance();
     console.log("LOAD MONGO SERVICE***", Products);
     break;
   case "MEMORY":
@@ -22,4 +24,4 @@ switch (PERSISTENCE) {
     break;
 }
 
-export { Products, Users };
+export { Products, Users, Carts };

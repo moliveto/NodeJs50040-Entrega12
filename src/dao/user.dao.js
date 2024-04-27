@@ -1,11 +1,11 @@
-import productModel from '../models/user.model.js';
+import userModel from '../models/user.model.js';
 import Container from '../container/MongoDb.container.js';
 
 let instance = null;
 
 class UserMongo extends Container {
   constructor() {
-    super(productModel);
+    super(userModel);
   };
 
   static getInstance() {
