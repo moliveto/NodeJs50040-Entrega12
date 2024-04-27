@@ -1,173 +1,70 @@
-const cartsModel = require('../models/carts.model')
+import CartRepo from '../repositories/cart.repository.js'
+const cartRepo = new CartRepo();
 
-class CartServiceManager {
+class CartsService {
+    constructor() { };
 
-    async getCarts() {
+    async getAll() {
         try {
-            const allCarts = await cartsModel.find({}).lean()
-            return allCarts
-        } catch (error) {
-            throw Error(error)
+            return await cartRepo.getAll();
+        } catch (err) {
+            console.log("🚀 ~ CartsService ~ getAll ~ err:", err)
+            throw Error(err);
         }
     }
 
-    async addCart(){
+    async getByIdArray(ids) {
         try {
-            const cart = await cartsModel.create({products: []})
-            .then((res) => {
-                return res._id 
-            })
-            .catch((error) => {
-                throw Error(error)
-            })
-
-            return cart
-        } catch (error) {
-            throw Error(error)
+            return await cartRepo.getByIdArray(ids);
+        } catch (err) {
+            console.log("🚀 ~ CartsService ~ getByIdArray ~ err:", err);
+            throw Error(err);
         }
     }
 
-    async getCartProducts(id){
+    async getById(id) {
         try {
-           const findCart = await cartsModel.findById(id).lean()
-           .then((res) => {
-            return res.products
-           })
-           .catch((error) => {
-            throw Error(error)
-           })
-
-           return findCart
-        } catch (error) {
-            throw Error(error)
+            return await cartRepo.getById(id);
+        } catch (err) {
+            console.log("🚀 ~ CartsService ~ getById ~ err:", err)
+            throw Error(err);
         }
     }
 
-    async addProductToCart(idCart, idProduct){
+    async getProductsByIds(ids) {
         try {
-            const cart = await cartsModel.findById(idCart)
-            const productExist = await cartsModel.find( {"_id": idCart, "products":{ 
-                $elemMatch:{"product": idProduct}
-             } } ).lean()
-
-            if (!cart){
-                throw Error("Cant find Cart ID")
-            }
-
-            if (!productExist.length){
-                const productAdd = await cartsModel.findByIdAndUpdate( idCart,
-                { $push: 
-                    { products: { product: idProduct, quantity: 1 } } 
-                })
-                .then((res) => {
-                    return `Se agrego el producto con id: ${idProduct} al carrito con id: ${idCart}` 
-                })
-                .catch((error) => {
-                    throw Error(error)
-                })
-                return productAdd
-            } else {
-                const productAddQuant = await cartsModel.findOneAndUpdate({_id: idCart, 'products.product': idProduct}, {$inc : {
-                    'products.$.quantity': 1
-                }})
-                .then((res) => {
-                    return `Se aumento el producto con id: ${idProduct} al carrito con id: ${idCart}`
-                })
-                .catch((error) => {
-                    throw Error(error)
-                })
-                return productAddQuant
-            }
-        } catch (error) {
-            throw Error(error)
+            return await cartRepo.getByIdArray(ids);
+        } catch (err) {
+            console.log("🚀 ~ CartsService ~ getProductsByIds ~ err:", err)
+            throw Error(err);
         }
     }
 
-    async deleteProductCart(idCart, idProduct){
-        try{
-            const cart = await cartsModel.findById(idCart)
-            const productExist = await cartsModel.find( {"_id": idCart, "products":{ 
-                $elemMatch:{"product": idProduct}
-             } } ).lean()
-
-            if (!cart){
-                throw Error("Cant find Cart ID")
-            }
-
-            if (!productExist.length){
-                throw Error("Producto no existe")
-            } 
-
-            const deleteProduct = await cartsModel.updateOne({_id: idCart},     
-                {$pull: {
-                    products: {product: idProduct},
-                }})
-                .then((res) => {
-                return `Se borro correctamente del carrito con id:${idCart} el producto con id: ${idProduct}`
-                })
-                .catch((error) => {
-                throw Error(error)
-                })
-
-            return deleteProduct
-        } catch (error) {
-            throw Error(error)
+    async add(cart) {
+        try {
+            return await cartRepo.save(cart);
+        } catch (err) {
+            console.log("🚀 ~ CartsService ~ add ~ err:", err)
+            throw Error(err);
         }
     }
 
-    async editProductQuantity(idCart, idProduct, quantity){
+    async update(id, cart) {
         try {
-            const cart = await cartsModel.findById(idCart)
-            const productExist = await cartsModel.find( {"_id": idCart, "products":{ 
-                $elemMatch:{"product": idProduct}
-             } } ).lean()
-
-            if (!cart){
-                throw Error("Cant find Cart ID")
-            }
-
-            if (!productExist.length){
-                throw Error("Producto no existe")
-            }
-
-            const productAddQuant = await cartsModel.findOneAndUpdate({_id: idCart, 'products.product': idProduct}, {$set : {
-                'products.$.quantity': quantity
-            }})
-            .then((res) => {
-                return `Se ajusto el producto con id: ${idProduct} a la cantidad ${quantity}, esto al carrito con id: ${idCart}`
-            })
-            .catch((error) => {
-                throw Error(error)
-            })
-
-            return productAddQuant
-        } catch (error) {
-            throw Error(error)
+            return await cartRepo.update(id, cart);
+        } catch (err) {
+            console.log("🚀 ~ ProductsService ~ updateProduct ~ err:", err)
         }
     }
 
-    async deleteAllCartProducts(idCart){
+    async deleteById(id) {
         try {
-            const cart = await cartsModel.findById(idCart)
-
-            if (!cart){
-                throw Error("Cant find Cart ID")
-            }
-
-            const deleteCartProducts = await cartsModel.findOneAndUpdate({_id: idCart}, {$set : {
-                'products': []
-            }})
-            .then((res) => {
-                return `Se borraron todos lo productos del carrito con id: ${idCart}`
-            })
-            .catch((error) => {
-                throw Error(error)
-            })
-
-            return deleteCartProducts
-        } catch (error) {
-            throw Error(error)
+            return await cartRepo.deleteById(id);
+        } catch (err) {
+            console.log("🚀 ~ CartsService ~ deleteById ~ err:", err);
+            throw Error(err);
         }
-    } 
+    }
 }
-module.exports = CartServiceManager
+
+export default CartsService;

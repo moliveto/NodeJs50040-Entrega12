@@ -36,14 +36,6 @@ class ProductsService {
         }
     }
 
-    async getProductsByCategory(category) {
-        try {
-            return await productRepo.getProductsByCategory(category);
-        } catch (err) {
-            console.log("🚀 ~ ProductsService ~ getProductsByCategory ~ err:", err)
-        }
-    }
-
     async addProduct(product) {
         try {
             return await productRepo.save(product);

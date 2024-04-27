@@ -18,10 +18,6 @@ class ProductRepo {
 
     }
 
-    async getProductsByCategory(category) {
-        return await this.dao.getProductsByCategory(category);
-    }
-
     async save(product) {
         return await this.dao.save(product);
     }
