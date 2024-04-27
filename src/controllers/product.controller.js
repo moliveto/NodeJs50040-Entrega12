@@ -1,14 +1,9 @@
-// import Products from "../dao/factory.js";
-// import ProductServiceDao from "../dao/product.service.js";
-// import ProductMemServiceDao from "../dao/product-mem.service.js";
-import { ProductService } from "../repository/index.js";
+import { ProductService } from "../dao/factory.js";
 import ProductDTO from "../dto/product.dto.js";
 
 export default class ProductCtrl {
   productService;
   constructor() {
-    // this.productService = new ProductMemServiceDao();
-    // this.productService = new ProductServiceDao();
     this.productService = ProductService;
   }
 
@@ -17,20 +12,18 @@ export default class ProductCtrl {
       const products = await this.productService.getAllProducts(req, res);
       return res.json({ message: `getAllProducts`, products });
     } catch (error) {
-      console.log(
-        "🚀 ~ file: product.controller.js:11 ~ ProductCtrl ~ getAllProducts= ~ error:",
-        error
-      );
-
+      console.log("🚀 ~ ProductCtrl ~ getAllProducts= ~ error:", error)
       return res.status(500).json({ message: error.message });
     }
   };
 
   getProductById = async (req, res) => {
     try {
+      console.log(req.params.pId);
       const product = await this.productService.getProductById(req, res);
       return res.json({ message: `method getUserById`, product });
     } catch (error) {
+      console.log("🚀 ~ ProductCtrl ~ getProductById= ~ error:", error)
       return res.status(500).json({ message: error.message });
     }
   };
@@ -38,7 +31,7 @@ export default class ProductCtrl {
   deleteProductById = async (req, res) => {
     try {
       console.log("IN PRODUCT CONTROLLER****");
-      const product = await this.productService.deleteProductById(req, res);
+      const product = await this.productService.deleteProduct(req, res);
 
       if (!product) {
         res.status(500).json({
@@ -70,6 +63,7 @@ export default class ProductCtrl {
         product,
       });
     } catch (error) {
+      console.log("🚀 ~ ProductCtrl ~ createProduct= ~ error:", error)
       return res.status(500).json({ message: error.message });
     }
   };

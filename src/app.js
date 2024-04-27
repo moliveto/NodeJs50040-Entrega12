@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import displayRoutes from "express-routemap";
 
+import usersRoutes from "./routes/user.routes.js";
 import productsRoutes from "./routes/product.routes.js";
 import { PORT, PERSISTENCE } from "./config/config.js";
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use("/api/users", usersRoutes);
 app.use("/api/products/", productsRoutes);
 
 app.listen(PORT_APP, () => {
