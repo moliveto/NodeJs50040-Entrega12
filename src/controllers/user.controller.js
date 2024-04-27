@@ -4,7 +4,7 @@ import UserDTO from "../dto/user.dto.js";
 export default class UserCtrl {
   userService;
   constructor() {
-    this.userService = UserService;
+    this.userService = new UserService();
   }
 
   getUsers = async (req, res) => {
