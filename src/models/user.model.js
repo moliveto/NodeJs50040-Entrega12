@@ -1,21 +1,90 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
-export const collection = "Users";
+import { createHashValue, isValidPasswd } from "../utils/encrypt.js";
+import validator from "validator";
 
-const schema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
-  age: Number,
-  password: String,
-  role: String,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  }
+const roleType = {
+  user: "user",
+  admin: "admin",
+  public: "public",
+};
+
+const userSchema = new mongoose.Schema({
+  first_name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  last_name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    lowercase: true,
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error('Invalid email format');
+      }
+    },
+  },
+  age: {
+    type: Number,
+    required: true,
+    min: 1,             // Enforces minimum age of 1
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 5,       // Enforces minimum password length
+    trim: true,
+  },
+  role: {
+    type: String,
+    enum: Object.values(roleType), // ['admin', 'public', 'user']
+    default: 'user',
+  },
+  carts: {
+    type: [
+      {
+        cart: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "carts",
+        },
+        _id: false,
+      },
+    ],
+    default: [],
+  },
+},
+  {
+    timestamps: true, // Automatically adds timestamps for created/updated at
+  });
+
+userSchema.plugin(mongoosePaginate);
+
+userSchema.pre("find", function () {
+  this.populate("carts.cart");
 });
 
-schema.plugin(mongoosePaginate);
-const userModel = mongoose.model(collection, schema);
+// Hash password before saving
+userSchema.pre('save', async function (next) {
+  const user = this; // Reference the current user object
+
+  if (user.isModified('password')) { // Check if password is modified
+    const pswHashed = await createHashValue(user.password);
+    user.password = await pswHashed; // Hash with a cost factor of 10
+  }
+
+  next();
+});
+
+const collection = "users";
+const userModel = mongoose.model(collection, userSchema);
+
 export default userModel;

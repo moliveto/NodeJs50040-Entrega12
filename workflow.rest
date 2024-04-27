@@ -54,6 +54,6 @@ Content-Type: application/json
   "last_name": "Oliveto",
   "email": "marcelo.oliveto@gmail.com",
   "age": 53,
-  "role": "admin",
-  "password" : "12345"
+  "password" : "12345",
+  "role": "admin"
 }
