@@ -4,6 +4,7 @@ import displayRoutes from "express-routemap";
 
 import usersRoutes from "./routes/user.routes.js";
 import productsRoutes from "./routes/product.routes.js";
+import cartRoutes from "./routes/carts.routes.js";
 import { PORT, PERSISTENCE } from "./config/config.js";
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(cookieParser());
 
 app.use("/api/users", usersRoutes);
 app.use("/api/products/", productsRoutes);
+app.use("/api/carts/", cartRoutes);
 
 app.listen(PORT_APP, () => {
     displayRoutes(app);

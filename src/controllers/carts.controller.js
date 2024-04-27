@@ -1,4 +1,4 @@
-const CartService = require("../services/cart.service.js")
+import CartService from "../services/cart.service.js";
 
 class CartCtrl {
     cartsService;
@@ -7,13 +7,20 @@ class CartCtrl {
     }
 
     addCartCtrl = async (req, res) => {
-        cartService.addCart().then(result => {
-            res.status(200).json(result);
-        }).catch(err => {
-            console.log(err);
-            res.status(400).json(err.message);
-        });
-    }
+        try {
+            console.log("BODY!!", req.body);
+
+            const cart = await this.cartsService.add(req.body);
+
+            return res.json({
+                message: `cart created`,
+                product: cart,
+            });
+        } catch (error) {
+            console.log("🚀 ~ CartCtrl ~ addCartCtrl= ~ error:", error)
+            return res.status(500).json({ message: error.message });
+        }
+    };
 
     getCartProductsCtrl = async (req, res) => {
         const id = req.params.cid

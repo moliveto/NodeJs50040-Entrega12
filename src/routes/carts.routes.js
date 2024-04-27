@@ -1,22 +1,22 @@
 import { Router } from "express";
 
-import { authMdw } from "../middleware/auth.middleware";
+import { handlePolicies } from "../middleware/handle-policies.middleware.js";
 
 import CartCtrl from "../controllers/carts.controller.js";
 
 const cartRouter = Router()
 const cartCtrl = new CartCtrl();
 
-cartRouter.post("/", authMdw(['public']), cartCtrl.addCartCtrl)
+cartRouter.post("/", handlePolicies(['public']), cartCtrl.addCartCtrl)
 
-cartRouter.get("/:cid", authMdw(['public']), cartCtrl.getCartProductsCtrl)
+cartRouter.get("/:cid", handlePolicies(['public']), cartCtrl.getCartProductsCtrl)
 
-cartRouter.post("/:cid/product/:pid", authMdw(['user', 'admin']), cartCtrl.addProductToCartCtrl)
+cartRouter.post("/:cid/product/:pid", handlePolicies(['user', 'admin']), cartCtrl.addProductToCartCtrl)
 
-cartRouter.delete("/:cid/product/:pid", authMdw(['user', 'admin']), cartCtrl.deleteProductCartCtrl)
+cartRouter.delete("/:cid/product/:pid", handlePolicies(['user', 'admin']), cartCtrl.deleteProductCartCtrl)
 
-cartRouter.put("/:cid/product/:pid", authMdw(['user', 'admin']), cartCtrl.editProductQuantityCtrl)
+cartRouter.put("/:cid/product/:pid", handlePolicies(['user', 'admin']), cartCtrl.editProductQuantityCtrl)
 
-cartRouter.delete("/:cid", authMdw(['user', 'admin']), cartCtrl.deleteAllCartProductsCtrl)
+cartRouter.delete("/:cid", handlePolicies(['user', 'admin']), cartCtrl.deleteAllCartProductsCtrl)
 
 export default cartRouter;

@@ -57,3 +57,23 @@ Content-Type: application/json
   "password" : "12345",
   "role": "admin"
 }
+
+###
+# @name productForCard
+GET {{url}}/api/products
+Content-Type: application/json
+###
+@productCart = {{productForCard.response.body.products.data.0._id}}
+
+# @name newCart
+
+POST  {{url}}/api/carts
+Content-Type: application/json
+
+{
+    "product" : "{{productCart}}",
+    "quantity" : 1
+}
+
+###
+@newCartId = {{newCart.response.body.cart._id}}
