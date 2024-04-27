@@ -1,29 +1,25 @@
-import connectDb from "./db.js";
 import { PERSISTENCE } from "../config/config.js";
+import pmDao from './product.dao.js';
+import umDao from './user.dao.js';
 
-let UserService, ProductService;
+let Products;
+let Users;
+let Carts;
+let Orders;
+let Messages;
 
 switch (PERSISTENCE) {
   case "MONGO":
-    await connectDb()
-      .then(async () => {
-        const { default: UserDao } = await import("../dao/user.dao.js");
-        const { default: ProductDao } = await import("../dao/product.dao.js");
-        UserService = new UserDao();
-        ProductService = new ProductDao();
-      })
-      .catch((err) => {
-        console.log("🚀 ~ file: factory.js:14 ~ err:", err);
-      });
+    Products = pmDao.getInstance();
+    Users = umDao.getInstance();
+    console.log("LOAD MONGO SERVICE***", Products);
     break;
   case "MEMORY":
     // TODO: Cargar el dao en memoria con await dynamic import
     console.log("LOAD MEMORY SERVICE***");
-    const { default: UserMemDao } = await import("../dao/user-mem.dao.js");
     const { default: ProductMemDao } = await import("../dao/product-mem.dao.js");
-    UserService = new UserMemDao();
-    ProductService = new ProductMemDao();
+    Products = new ProductMemDao();
     break;
 }
 
-export { UserService, ProductService };
+export { Products, Users };

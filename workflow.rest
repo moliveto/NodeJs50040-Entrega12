@@ -1,13 +1,5 @@
 @url = http://localhost:3000
 
-# @name product
-GET {{url}}/api/products
-
-###
-@productId = {{product.response.body.products.0._id}}
-
-GET {{url}}/api/products/{{productId}}
-
 ###
 POST {{url}}/api/products/
 Content-Type: application/json
@@ -22,13 +14,36 @@ Content-Type: application/json
 }
 ###
 
+
+# @name product
+GET {{url}}/api/products
+
+@pId = {{product.response.body.products.data.0._id}}
+
+###
+GET {{url}}/api/products/{{pId}}
+
+###
+POST {{url}}/api/products/
+Content-Type: application/json
+
+{
+  "name" : "Coca cola 2",
+  "description" : "Bebida cola",
+  "price" : 101.10,
+  "thumbnail" : "cocacola.jpg",
+  "quantity" : 30,
+  "status": true
+}
+###
+
 # @name products
 GET {{url}}/api/products
 
 ###
-@productId = {{product.response.body.products.0._id}}
+@pIdLast = {{product.response.body.products.data.0._id}}
 
-DELETE {{url}}/api/products/{{productId}}
+DELETE {{url}}/api/products/{{pIdLast}}
 ###
 
 POST {{url}}/api/users/

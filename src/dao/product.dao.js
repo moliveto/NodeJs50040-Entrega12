@@ -1,45 +1,38 @@
-import productModels from "../model/product.model.js";
+import productModel from '../models/product.model.js';
+import Container from '../container/MongoDb.container.js';
 
-class ProductDao {
-  constructor() { }
+let instance = null;
 
-  getAllProducts = async (req, res) => {
-    try {
-      return await productModels.find({});
-    } catch (error) {
-      console.log("🚀 ~ ProductDao ~ getAllProducts= ~ error:", error)
-      return res.status(500).json({ message: error.message });
-    }
+class ProductsMongo extends Container {
+  constructor() {
+    super(productModel);
   };
 
-  getProductById = async (req, res) => {
+  async getProductsByCategory(category) {
     try {
-      return await productModels.findById({ _id: req.params.pId });
-    } catch (error) {
-      console.log("🚀 ~ ProductDao ~ getProductById= ~ error:", error)
-      return res.status(500).json({ message: error.message });
-    }
-  };
+      const docs = await this.model.find({ category: category }).lean().then(ds => {
+        if (ds.length) {
+          return ds.map(d => {
+            d.id = String(d._id); // we add id explicitly
+            return d;
+          });
+        }
+        return [];
+      });
 
-  createProduct = async (productBodyDto) => {
-    try {
-      const newProduct = await productModels.create(productBodyDto);
-      return newProduct;
-    } catch (error) {
-      console.log("🚀 ~ ProductRepositoryDao ~ createProduct= ~ error:", error)
-      throw error;
+      return { status: 'success', message: 'Productos encontrados.', data: docs };
+    } catch (err) {
+      errorLogger.error(`Error: ${err}`);
+      return { status: 'error', message: `Error al encontrar productos por categoría: ${err}` };
     }
-  };
+  }
 
-  deleteProduct = async (req, res) => {
-    try {
-      const deleteProduct = await productModels.deleteOne(req.params.pId);
-      return deleteProduct;
-    } catch (error) {
-      console.log("🚀 ~ ProductDao ~ deleteProduct ~ error:", error)
-      return res.status(500).json({ message: error.message });
+  static getInstance() {
+    if (!instance) {
+      instance = new ProductsMongo();
     }
-  };
-}
+    return instance
+  }
+};
 
-export default ProductDao
+export default ProductsMongo;

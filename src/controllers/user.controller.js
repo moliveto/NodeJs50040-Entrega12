@@ -1,5 +1,5 @@
+import UserService from '../services/user.service.js';
 import UserDTO from "../dto/user.dto.js";
-import { UserService } from "../dao/factory.js";
 
 export default class UserCtrl {
   userService;
@@ -54,7 +54,7 @@ export default class UserCtrl {
 
       const userDto = new UserDTO(req.body);
       console.log("DTO!!", userDto);
-      const user = await this.userService.createUser(userDto);
+      const user = await this.userService.addUser(userDto);
 
       return res.json({
         message: `user created`,

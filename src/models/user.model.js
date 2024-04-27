@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-import { collection as collectionBusiness } from "./business.model.js";
 
 export const collection = "Users";
 
@@ -11,12 +10,10 @@ const schema = new mongoose.Schema({
   age: Number,
   password: String,
   role: String,
-  orders: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: collectionBusiness,
-    },
-  ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  }
 });
 
 schema.plugin(mongoosePaginate);

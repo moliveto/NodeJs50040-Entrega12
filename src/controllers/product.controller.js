@@ -1,15 +1,15 @@
-import { ProductService } from "../dao/factory.js";
+import ProductsService from '../services/product.service.js';
 import ProductDTO from "../dto/product.dto.js";
 
-export default class ProductCtrl {
-  productService;
+class ProductCtrl {
+  productsService;
   constructor() {
-    this.productService = ProductService;
+    this.productsService = new ProductsService();
   }
 
   getAllProducts = async (req, res) => {
     try {
-      const products = await this.productService.getAllProducts(req, res);
+      const products = await this.productsService.getAllProducts(req, res);
       return res.json({ message: `getAllProducts`, products });
     } catch (error) {
       console.log("🚀 ~ ProductCtrl ~ getAllProducts= ~ error:", error)
@@ -20,8 +20,8 @@ export default class ProductCtrl {
   getProductById = async (req, res) => {
     try {
       console.log(req.params.pId);
-      const product = await this.productService.getProductById(req, res);
-      return res.json({ message: `method getUserById`, product });
+      const product = await this.productsService.getProductById(req.params.pId);
+      return res.json({ message: `method getProductById`, product });
     } catch (error) {
       console.log("🚀 ~ ProductCtrl ~ getProductById= ~ error:", error)
       return res.status(500).json({ message: error.message });
@@ -30,9 +30,8 @@ export default class ProductCtrl {
 
   deleteProductById = async (req, res) => {
     try {
-      console.log("IN PRODUCT CONTROLLER****");
-      const product = await this.productService.deleteProduct(req, res);
-
+      console.log(req.params.pId);
+      const product = await this.productsService.deleteProductById(req.params.pId);
       if (!product) {
         res.status(500).json({
           message: `can not delete this product`,
@@ -54,9 +53,7 @@ export default class ProductCtrl {
 
       const productDto = new ProductDTO(req.body);
 
-      // TODO: si el deteo tiene algun error lanzar su error 400 o BAD REQUEST
-
-      const product = await this.productService.createProduct(productDto);
+      const product = await this.productsService.addProduct(productDto);
 
       return res.json({
         message: `product created`,
@@ -68,3 +65,5 @@ export default class ProductCtrl {
     }
   };
 }
+
+export default ProductCtrl;

@@ -1,11 +1,4 @@
 import { Router } from "express";
-// import {
-//   getUsers,
-//   getUserById,
-//   createUser,
-//   updateUserById,
-//   deleteUserById,
-// } from "../controllers/user.controller.js";
 
 import UserCtrl from "../controllers/user.controller.js";
 
