@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { MONGO_URI } from "../config/config.js";
+import { logger } from "../utils/logger.js";
+const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
@@ -16,7 +18,7 @@ export default class Container {
             const newDoc = await this.model.create(object);
             return { status: 'success', message: `Documento agregado con id: ${newDoc._id}`, id: newDoc._id }
         } catch (err) {
-            console.log("🚀 ~ Container ~ save ~ err:", err)
+            logger.error(`${err}`);
             return { status: 'error', message: `Error al agregar documento: ${err}` }
         }
     }
@@ -36,7 +38,7 @@ export default class Container {
             });
             return { status: 'success', message: 'Se obtuvieron de manera exitosa los datos.', data: docs }
         } catch (err) {
-            console.log("🚀 ~ Container ~ getAll ~ err:", err)
+            logger.error(`${err}`);
             return { status: 'error', message: `Error al buscar registros: ${err}` }
         }
     }
@@ -47,7 +49,7 @@ export default class Container {
             const doc = await this.model.findById(id).lean();
             return { status: 'success', message: 'Documento encontrado.', data: { id: doc._id, ...doc } }
         } catch (err) {
-            console.log("🚀 ~ Container ~ getById ~ err:", err)
+            logger.error(`${err}`);
             return { status: 'error', message: `Error al buscar registro con id ${id}. ${err}` }
         }
     }
@@ -67,7 +69,7 @@ export default class Container {
 
             return { status: 'success', message: 'Documento encontrado.', data: docs }
         } catch (err) {
-            console.log("🚀 ~ Container ~ getByIdArray ~ err:", err)
+            logger.error(`${err}`);
             return { status: 'error', message: `Error al buscar registros con ids ${ids}. ${err}` }
         }
     }
@@ -77,7 +79,7 @@ export default class Container {
             await this.model.updateOne({ _id: id }, object)
             return { status: 'success', message: 'Documento actualizado.' }
         } catch (err) {
-            console.log("🚀 ~ Container ~ update ~ err:", err)
+            logger.error(`${err}`);
             return { status: 'error', message: `No se pudo actualizar el documento: ${err}` }
         }
     }
@@ -87,7 +89,7 @@ export default class Container {
             await this.model.deleteOne({ _id: id })
             return { status: 'success', message: 'Se elimino con éxito el elemento.' }
         } catch (err) {
-            console.log("🚀 ~ Container ~ deleteById ~ err:", err)
+            logger.error(`${err}`);
             return { status: 'error', message: `No se pudo eliminar el documento: ${err}` }
         }
     }
